@@ -1,0 +1,19 @@
+auth:
+  postgresPassword: "rootpassword"   # Für Lernzwecke OK
+  username: appuser
+  password: "userpassword"
+  database: appdb
+
+primary:
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClass: "standard"         # Minikube default StorageClass
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
