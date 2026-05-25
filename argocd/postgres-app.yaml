@@ -8,13 +8,19 @@ metadata:
 spec:
   project: default
 
-  source:
-    repoURL: https://github.com/ThomasPolzer/gitops-postgresql.git
-    targetRevision: master
-    path: apps/postgres
-    helm:
-      valueFiles:
-        - values.yaml
+  sources:
+    # Quelle 1: Bitnami Helm Chart direkt
+    - repoURL: https://charts.bitnami.com/bitnami
+      chart: postgresql
+      targetRevision: "15.5.35"
+      helm:
+        valueFiles:
+          - $values/apps/postgres/values.yaml
+
+    # Quelle 2: Dein Git-Repo – nur für values.yaml
+    - repoURL: https://github.com/ThomasPolzer/gitops-postgresql.git
+      targetRevision: main
+      ref: values                    # Alias $values zeigt auf dieses Repo
 
   destination:
     server: https://kubernetes.default.svc
@@ -22,7 +28,7 @@ spec:
 
   syncPolicy:
     automated:
-      prune: true       # Ressourcen werden gelöscht wenn sie aus Git entfernt werden
-      selfHeal: true    # Manuelle Cluster-Änderungen werden automatisch zurückgesetzt
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
